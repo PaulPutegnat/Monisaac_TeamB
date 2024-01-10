@@ -74,7 +74,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 11e370da7721cdc42b28182c68ac3960, type: 3}
-  m_Color: {r: 1, g: 0, b: 0, a: 1}
+  m_Color: {r: 0.80392164, g: 0, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -158,7 +158,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 11e370da7721cdc42b28182c68ac3960, type: 3}
-  m_Color: {r: 1, g: 0, b: 0, a: 1}
+  m_Color: {r: 0.8057866, g: 0, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -249,8 +249,8 @@ GameObject:
   - component: {fileID: 4766563019477658477}
   - component: {fileID: 1940373930646248325}
   m_Layer: 0
-  m_Name: Enemy
-  m_TagString: RedEnemy
+  m_Name: SmallEnemy
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -265,7 +265,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 7.99, y: 3.4792922, z: -2.5082116}
-  m_LocalScale: {x: 0.5, y: 0.5, z: 1}
+  m_LocalScale: {x: 0.25, y: 0.25, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 4766563019395885402}
@@ -356,9 +356,9 @@ MonoBehaviour:
   attackDistance: 0.9
   attackCooldown: 0.5
   orientation: 1
-  smallerEnemies: {fileID: 4766563019477658476, guid: 2d1a3d6f039567e43a868fd250f4d217,
+  smallerEnemies: {fileID: 4766563019477658476}
+  commonEnemies: {fileID: 4766563019477658476, guid: 9da7b780c096a1f42b3578150579f43f,
     type: 3}
-  commonEnemies: {fileID: 4766563019477658476}
 --- !u!210 &1940373930646248325
 SortingGroup:
   m_ObjectHideFlags: 0
