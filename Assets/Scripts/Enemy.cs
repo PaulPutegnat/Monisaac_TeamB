@@ -81,13 +81,16 @@ public class Enemy : MonoBehaviour
 
 	public static List<Enemy> allEnemies = new List<Enemy>();
 
+    // Enemies variants
+    public GameObject smallerEnemies;
+    public GameObject commonEnemies;
+
     // Use this for initialization
     private void Awake()
     {
         _body = GetComponent<Rigidbody2D>();
         GetComponentsInChildren<SpriteRenderer>(true, _spriteRenderers);
 		allEnemies.Add(this);
-
 	}
 
 	private void OnDestroy()
@@ -177,7 +180,23 @@ public class Enemy : MonoBehaviour
 		switch (_state)
         {
             case STATE.STUNNED: _currentMovement = stunnedMovement; break;
-            case STATE.DEAD: EndBlink(); Destroy(gameObject); break;
+            case STATE.DEAD: EndBlink(); 
+                Destroy(gameObject);
+                if (this.CompareTag("Boss"))
+                {
+                    for (int i = 0; i < Random.Range(2, 4); i++)
+                    {
+                        Instantiate(commonEnemies, new Vector2(this.transform.position.x + Random.Range(-0.2f, 0.2f), this.transform.position.y + Random.Range(-0.2f, 0.2f)), Quaternion.identity);
+                    }
+                }
+                else if (this.CompareTag("RedEnemy"))
+                {
+                    for (int i = 0; i < Random.Range(2, 4); i++)
+                    {
+                        Instantiate(smallerEnemies, new Vector2(this.transform.position.x + Random.Range(-0.2f, 0.2f), this.transform.position.y + Random.Range(-0.2f, 0.2f)), Quaternion.identity);
+                    }   
+                }
+                break;
             default: _currentMovement = defaultMovement; break;
         }
 
@@ -248,14 +267,14 @@ public class Enemy : MonoBehaviour
             return;
         _lastHitTime = Time.time;
 
-        life -= 1;
+        life -= (attack != null ? attack.damages : 1);
         if (life <= 0)
         {
             SetState(STATE.DEAD);
         }
         else
         {
-            if (attack != null)
+            if (attack != null && attack.knockbackDuration > 0.0f)
             {
                 StartCoroutine(ApplyKnockBackCoroutine(attack.knockbackDuration, attack.transform.right * attack.knockbackSpeed));
             }
