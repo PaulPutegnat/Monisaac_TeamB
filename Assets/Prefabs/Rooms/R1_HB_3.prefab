@@ -99,7 +99,7 @@ GameObject:
   - component: {fileID: 7906677734586369024}
   - component: {fileID: 3115939115062263134}
   m_Layer: 0
-  m_Name: CorridorVert3
+  m_Name: R1_HB_3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
