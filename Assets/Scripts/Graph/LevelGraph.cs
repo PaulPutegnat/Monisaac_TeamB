@@ -7,7 +7,7 @@ public class LevelGraph : MonoBehaviour
 {
     private Dictionary<Vector2Int, RoomNode> _nodes;
     public int SizeNodelist = 10;
-    public int branchs = 0;
+    [Range(1,100)]public int BranchsMax = 0;
     public int Limitedtry = 1000;
     public int RoomWidth = 100;
     public int RoomHeight = 100;
@@ -41,7 +41,7 @@ public class LevelGraph : MonoBehaviour
             _nodes[Vector2Int.zero] = new RoomNode(Vector2Int.zero, null);
             if (TryToGeneratePath(_nodes[Vector2Int.zero], SizeNodelist))
             {
-                for (int i = 0; i < branchs; i++)
+                for (int i = 1; i < BranchsMax; i++)
                 {
                     int randomIndex = Random.Range(0, _nodes.Count);
                     TryToGeneratePath(_nodes.Values.ElementAt(randomIndex),Random.Range(1, SizeNodelist));

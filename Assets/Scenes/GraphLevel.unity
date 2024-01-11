@@ -244,10 +244,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 09ad256d8d94d6d46abeb94e8c8bfa63, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SizeNodelist: 50
+  SizeNodelist: 15
+  BranchsMax: 0
   Limitedtry: 1000
   RoomWidth: 10
   RoomHeight: 10
+  useSeed: 1
+  seed: 2
 --- !u!4 &1054460047
 Transform:
   m_ObjectHideFlags: 0
