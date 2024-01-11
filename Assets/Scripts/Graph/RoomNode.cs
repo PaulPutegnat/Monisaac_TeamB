@@ -7,6 +7,7 @@ public class RoomNode
    public enum Type {Start,End,Default }
    public Type NodeType;
     public Vector2Int GraphPosition;
+    public int difficulty;
     public RoomConnection[] connections = new RoomConnection[4];
     //public GameObject @object;
 
