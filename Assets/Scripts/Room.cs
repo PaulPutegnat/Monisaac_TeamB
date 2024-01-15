@@ -8,12 +8,22 @@ using UnityEngine;
 /// Represents a single room in your dungeon
 /// A room has an (i,j) integer position and a (di, dj) integer size in index coordinates
 /// </summary>
+/// 
+public enum Difficulty { Easy, Medium, Hard }
+public enum Items { Heart, Key, Both }
+public enum Direction { Sideways, UpDown, Cross, DMissingUp, DMissingDown, DMissingRight, DMissingLeft }
 public class Room : MonoBehaviour {
 
+    // Room attributes
+    #region
     public bool isStartRoom = false;
+    public Difficulty difficulty;
+    public Direction direction;
+    public Items items;
+    #endregion
 
     // Position of the room in index coordinates. Coordinates {0,0} are the coordinates of the central room. Room {1,0} is on the right side of room {0,0}.
-	public Vector2Int position = Vector2Int.zero;
+    public Vector2Int position = Vector2Int.zero;
     // Size of the room in index coordinates. By default : {1,1}.
     public Vector2Int size = Vector2Int.one;
 
