@@ -18,6 +18,7 @@ public class Room : MonoBehaviour {
     #region
     public bool isStartRoom = false;
     public Difficulty difficulty;
+    public Direction direction;
     public Items items;
     #endregion
 
