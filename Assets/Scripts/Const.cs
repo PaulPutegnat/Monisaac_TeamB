@@ -99,4 +99,40 @@ public static class Utils {
         return Mathf.Round(angle / step) * step;
     }
 
+
+    public static int OrientationToIndex(ORIENTATION orientation)
+    {
+        switch (orientation)
+        {
+            case ORIENTATION.NORTH: return 0;
+            case ORIENTATION.EAST: return 1;
+            case ORIENTATION.SOUTH: return 2;
+            case ORIENTATION.WEST: return 3;
+            default: return 0;
+        }
+    }
+
+    public static ORIENTATION IndexToOrientation(int Orientation)
+    {
+        switch (Orientation)
+        {
+            case 0: return ORIENTATION.SOUTH;
+            case 1: return ORIENTATION.WEST;
+            case 2: return ORIENTATION.NORTH;
+            case 3: return ORIENTATION.EAST;
+            default: return ORIENTATION.NONE;
+        }
+    }
+
+    public static List<ORIENTATION> AllOtherOrientation(ORIENTATION orientation)
+    {
+        List < ORIENTATION > result = new List<ORIENTATION>();
+        for (int i = 0; i < 4; i++)
+        {
+            result.Add(IndexToOrientation(i));
+        }
+
+        result.RemoveAt(OrientationToIndex(orientation));
+        return result;
+    }
 }
