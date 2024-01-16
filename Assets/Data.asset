@@ -12,3 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3008c73e76269f54a88dc32b15632e99, type: 3}
   m_Name: Data
   m_EditorClassIdentifier: 
+  RoomPrefabs: []
