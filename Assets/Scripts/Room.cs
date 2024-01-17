@@ -159,14 +159,24 @@ public class Room : MonoBehaviour {
 
 	void Start()
 	{
-		RefreshDoors();
+       // StartRoom();
         if (isStartRoom)
         {
             Player.Instance.EnterRoom(this);
         }
     }
 
-	private void RefreshDoors()
+    public void StartRoom()
+    {
+        RefreshDoors();
+        foreach (var item in doors)
+        {
+            item.Room = this;
+            item.StartDoor();
+        }
+    }
+
+    private void RefreshDoors()
 	{
 		if(doors == null) {
             doors = new List<Door>();

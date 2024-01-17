@@ -64,13 +64,14 @@ public class LevelGraph : MonoBehaviour
         GenerateMap(difficulty);
     }
 
-     void GenerateMap(int difficulty)
+    void GenerateMap(int difficulty)
     {
-        _rooms = new Room[_nodes.Count-1];
+        _rooms = new Room[_nodes.Count];
         int i = 0;
-        foreach (var node in _nodes) {
-           _rooms[i] =  Instantiate(db.GetRandomByNodeRoom(node.Value, difficulty));
-            _rooms[i].transform.position = Utils.ConvertGraphPosToWorldPos(_rooms[i].transform.lossyScale, node.Key);
+        foreach (var node in _nodes)
+        {
+            _rooms[i] = Instantiate(db.GetRandomByNodeRoom(node.Value, 0));
+            _rooms[i].transform.position = Utils.ConvertGraphPosToWorldPos(_rooms[i].transform.lossyScale, node.Key) *10 * _rooms[i].size;
             i++;
         }
     }
@@ -100,8 +101,8 @@ public class LevelGraph : MonoBehaviour
                     int secondaryPathIndex = 0;
                     while (!indexFound)
                     {
-                     randomIndex = Random.Range(StartUnlockedDoor, EndUnlockedDoor);
-                     secondaryPathIndex = Random.Range(0, randomIndex + 1);
+                        randomIndex = Random.Range(StartUnlockedDoor, EndUnlockedDoor);
+                        secondaryPathIndex = Random.Range(0, randomIndex + 1);
                         indexFound = mainPath[randomIndex].NodeType != RoomNode.Type.Locked;
                     }
                     bool hasGneratePath = TryToGeneratePath(mainPath[secondaryPathIndex], Random.Range(1, SizeNodelist));

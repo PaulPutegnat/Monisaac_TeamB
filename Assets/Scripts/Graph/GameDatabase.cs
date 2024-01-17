@@ -2,21 +2,34 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using NaughtyAttributes;
+using UnityEditor;
 
 [CreateAssetMenu(fileName = "Data",menuName = "DataBase")]
 public class GameDatabase : ScriptableObject
 {
     public List<Room> RoomPrefabs;
 
+    [Button]
+    void UpdateRooms()
+    {
+        RoomPrefabs.Clear();
+        RoomPrefabs = Utils.LoadAllPrefabsOfType<Room>();
+        foreach (var item in RoomPrefabs)
+        {
+            item.StartRoom();
+        }
+    }
+
     public Room GetRandomRoomByType(RoomNode.Type type)
     {
         List<Room> roomByType = RoomPrefabs.Where(item => item.NodeType == type).ToList();
-        int randomIndex = Random.Range(0, roomByType.Count);
+        int randomIndex = Random.Range(0, roomByType.Count -1);
         return roomByType[randomIndex];
     }
 
     public Room GetRandomByNodeRoom(RoomNode node,int difficulty) {
-        List<Room> roomByNodeRoom = RoomPrefabs.Where(item =>
+        var roomByNodeRoom = RoomPrefabs.Where(item =>
             (node.connections[0] != null) == (item.GetDoor(Utils.ORIENTATION.NORTH) != null)
             && (node.connections[1] != null) == (item.GetDoor(Utils.ORIENTATION.EAST) != null)
             && (node.connections[2] != null) == (item.GetDoor(Utils.ORIENTATION.SOUTH) != null)
