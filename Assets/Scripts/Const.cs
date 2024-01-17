@@ -135,4 +135,9 @@ public static class Utils {
         result.RemoveAt(OrientationToIndex(orientation));
         return result;
     }
+
+    public static Vector2 ConvertGraphPosToWorldPos(Vector2 GameObjectSize,Vector2Int GraphPos)
+    {
+        return GameObjectSize * GraphPos;
+    }
 }
