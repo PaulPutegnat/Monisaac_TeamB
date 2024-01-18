@@ -11,9 +11,10 @@ using UnityEngine;
 public class Room : MonoBehaviour {
 
     public bool isStartRoom = false;
-
+    public int difficulty;
+    public RoomNode.Type NodeType;
     // Position of the room in index coordinates. Coordinates {0,0} are the coordinates of the central room. Room {1,0} is on the right side of room {0,0}.
-	public Vector2Int position = Vector2Int.zero;
+    public Vector2Int position = Vector2Int.zero;
     // Size of the room in index coordinates. By default : {1,1}.
     public Vector2Int size = Vector2Int.one;
 
@@ -158,14 +159,24 @@ public class Room : MonoBehaviour {
 
 	void Start()
 	{
-		RefreshDoors();
+       // StartRoom();
         if (isStartRoom)
         {
             Player.Instance.EnterRoom(this);
         }
     }
 
-	private void RefreshDoors()
+    public void StartRoom()
+    {
+        RefreshDoors();
+        foreach (var item in doors)
+        {
+            item.Room = this;
+            item.StartDoor();
+        }
+    }
+
+    private void RefreshDoors()
 	{
 		if(doors == null) {
             doors = new List<Door>();

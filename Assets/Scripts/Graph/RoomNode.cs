@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class RoomNode
 {
-    public enum Type { Start, End, Default,Key,Locked }
+    public enum Type { Start, End, Default,Key,Locked,Secret  }
     public Type NodeType;
     public Vector2Int GraphPosition;
     public int difficulty;

@@ -6,19 +6,38 @@ using System.Linq;
 public class LevelGraph : MonoBehaviour
 {
     private Dictionary<Vector2Int, RoomNode> _nodes;
-
+    private Room[] _rooms;
+    public GameDatabase db;
     [Header("Unlocked Door")]
-    public int numUnlockedDoor = 0;
+
     [Range(1, 100)] public int startSpawnUnlockedDoor = 1;
-    [Range(1, 100)] public int EndSpawnUnlockedDoor = 2;
+    [Range(1, 100)] public int endSpawnUnlockedDoor = 2;
+    int difficulty = 0;
+    private int StartUnlockedDoor
+    {
+        get
+        {
+            return Mathf.Clamp(startSpawnUnlockedDoor, 0, mainPath.Count - 2);
+        }
+    }
+
+    private int EndUnlockedDoor
+    {
+        get
+        {
+            return Mathf.Clamp(endSpawnUnlockedDoor, StartUnlockedDoor, mainPath.Count - 2);
+        }
+    }
+
 
 
     [Header("Nodes")]
-    [Range(1, 100)] public int BranchsMax = 0;
+    [Range(1, 100)] public int unlockedMax = 0;
     public int SizeNodelist = 10;
     private int Limitedtry = 1000;
     public bool useSeed = false;
     private List<RoomNode> lastPath = new List<RoomNode>();
+    private List<RoomNode> mainPath = new List<RoomNode>();
 
     [Header("Gizmos")]
     public int RoomWidth = 100;
@@ -29,6 +48,11 @@ public class LevelGraph : MonoBehaviour
         _nodes.Clear();
         GenerateGraph();
     }
+    [Button(enabledMode: EButtonEnableMode.Playmode)]
+    void GenerateGraphMap()
+    {
+        GenerateMap(difficulty);
+    }
     [ShowIf("useSeed")] public int seed = 0;
 
     readonly Vector2Int[] adjacentDir = { new Vector2Int(1,0) , new Vector2Int(0,1)
@@ -37,7 +61,21 @@ public class LevelGraph : MonoBehaviour
     private void Start()
     {
         GenerateGraph();
+        GenerateMap(difficulty);
     }
+
+    void GenerateMap(int difficulty)
+    {
+        _rooms = new Room[_nodes.Count];
+        int i = 0;
+        foreach (var node in _nodes)
+        {
+            _rooms[i] = Instantiate(db.GetRandomByNodeRoom(node.Value, 0));
+            _rooms[i].transform.position = Utils.ConvertGraphPosToWorldPos(_rooms[i].transform.lossyScale, node.Key) *10 * _rooms[i].size;
+            i++;
+        }
+    }
+
     void GenerateGraph()
     {
         if (useSeed)
@@ -49,36 +87,43 @@ public class LevelGraph : MonoBehaviour
         while (currentTry != Limitedtry)
         {
             _nodes = new Dictionary<Vector2Int, RoomNode>();
+            _nodes = new Dictionary<Vector2Int, RoomNode>();
             _nodes[Vector2Int.zero] = new RoomNode(Vector2Int.zero);
+            mainPath.Clear();
+            bool failedToGeneratelocked = false;
             if (TryToGeneratePath(_nodes[Vector2Int.zero], SizeNodelist))
             {
-                for (int i = 1; i < BranchsMax; i++)
+                mainPath.AddRange(lastPath);
+                for (int i = 0; i < unlockedMax; i++)
                 {
-                    int randomIndex = Random.Range(0, _nodes.Count);
-                    TryToGeneratePath(_nodes.Values.ElementAt(randomIndex), Random.Range(1, SizeNodelist));
-                }
-                if (numUnlockedDoor > 0)
-                {
-                  bool canMakePath = false;
-                    while (!canMakePath)
+                    bool indexFound = false;
+                    int randomIndex = 0;
+                    int secondaryPathIndex = 0;
+                    while (!indexFound)
                     {
-                        for (int i = 0; i < numUnlockedDoor; i++)
-                        {
-                            int randomdoor = Random.Range(startSpawnUnlockedDoor, EndSpawnUnlockedDoor);
-                            canMakePath = TryToGeneratePath(_nodes.Values.ElementAt(randomdoor), Random.Range(1, SizeNodelist));
-                            _nodes.Values.ElementAt(randomdoor).NodeType = RoomNode.Type.Locked;
-                            _nodes.Values.ElementAt(_nodes.Count - 1).NodeType = RoomNode.Type.Key;
-                            if (!canMakePath)
-                            {
-                                foreach (var item in lastPath)
-                                {
-                                    _nodes.Remove(item.GraphPosition);
-                                }
-                                break;
-                            }
-                        }
+                        randomIndex = Random.Range(StartUnlockedDoor, EndUnlockedDoor);
+                        secondaryPathIndex = Random.Range(0, randomIndex + 1);
+                        indexFound = mainPath[randomIndex].NodeType != RoomNode.Type.Locked;
+                    }
+                    bool hasGneratePath = TryToGeneratePath(mainPath[secondaryPathIndex], Random.Range(1, SizeNodelist));
+                    if (hasGneratePath)
+                    {
+                        mainPath[randomIndex].NodeType = RoomNode.Type.Locked;
+                        lastPath[lastPath.Count - 1].NodeType = RoomNode.Type.Key;
+                        mainPath[randomIndex].next.Islocked = true;
 
                     }
+                    else
+                    {
+                        failedToGeneratelocked = true;
+                        break;
+                    }
+                }
+                if (failedToGeneratelocked)
+                {
+                    currentTry++;
+                    Debug.LogWarning("Relaunch");
+                    continue;
                 }
                 break;
             }
