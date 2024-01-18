@@ -14,6 +14,7 @@ public class GameDatabase : ScriptableObject
         int randomIndex = Random.Range(0, roomByType.Count);
         return roomByType[randomIndex];
     }
+
     public GameObject GetRandomRoomByTypeAndDifficulty(RoomNode.Type type,int Difficulty)
     {
         List<GameObject> roomByType = RoomPrefabs.Where(item => item.GetComponent<RoomNode>().NodeType == type
