@@ -1,8 +1,11 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.IO;
+using UnityEditor;
 using UnityEngine;
 
-public static class Utils {	
+public static class Utils
+{
 
     public enum ORIENTATION
     {
@@ -19,14 +22,16 @@ public static class Utils {
     public static float OrientationToAngle(ORIENTATION orientation, ORIENTATION origin = ORIENTATION.NORTH)
     {
         float toNorthAngle = 0;
-        switch (orientation) {
+        switch (orientation)
+        {
             case ORIENTATION.NORTH: toNorthAngle = 0.0f; break;
             case ORIENTATION.EAST: toNorthAngle = 90.0f; break;
             case ORIENTATION.SOUTH: toNorthAngle = 180.0f; break;
             case ORIENTATION.WEST: toNorthAngle = 270.0f; break;
             default: toNorthAngle = 270.0f; break;
         }
-        if (origin == ORIENTATION.NORTH) {
+        if (origin == ORIENTATION.NORTH)
+        {
             return toNorthAngle;
         }
         float originToNorthAngle = OrientationToAngle(origin, ORIENTATION.NORTH);
@@ -47,11 +52,11 @@ public static class Utils {
             case ORIENTATION.WEST: roundAngle += 3; break;
         }
         roundAngle = roundAngle % 4;
-        if(roundAngle < 0)
+        if (roundAngle < 0)
         {
             roundAngle += 4;
         }
-        switch(roundAngle)
+        switch (roundAngle)
         {
             case 0: return ORIENTATION.NORTH;
             case 1: return ORIENTATION.EAST;
@@ -61,40 +66,40 @@ public static class Utils {
         }
     }
 
-	/// <summary>
+    /// <summary>
     /// Transforms an ORIENTATION into direction (Vector2Int)
     /// </summary>
-	public static Vector2Int OrientationToDir(ORIENTATION orientation)
-	{
-		switch (orientation)
-		{
-			case ORIENTATION.NORTH: return new Vector2Int(0,1);
-			case ORIENTATION.EAST: return new Vector2Int(1, 0);
-			case ORIENTATION.SOUTH: return new Vector2Int(0, -1);
-			case ORIENTATION.WEST: return new Vector2Int(-1, 0);
-			default: return new Vector2Int(0, 0);
-		}
-	}
+    public static Vector2Int OrientationToDir(ORIENTATION orientation)
+    {
+        switch (orientation)
+        {
+            case ORIENTATION.NORTH: return new Vector2Int(0, 1);
+            case ORIENTATION.EAST: return new Vector2Int(1, 0);
+            case ORIENTATION.SOUTH: return new Vector2Int(0, -1);
+            case ORIENTATION.WEST: return new Vector2Int(-1, 0);
+            default: return new Vector2Int(0, 0);
+        }
+    }
 
     /// <summary>
     /// Gets opposit orientation for a given orientation
     /// </summary>
 	public static ORIENTATION OppositeOrientation(ORIENTATION orientation)
-	{
-		switch (orientation)
-		{
-			case ORIENTATION.NORTH: return ORIENTATION.SOUTH;
-			case ORIENTATION.EAST: return ORIENTATION.WEST;
-			case ORIENTATION.SOUTH: return ORIENTATION.NORTH;
-			case ORIENTATION.WEST: return ORIENTATION.EAST;
-			default: return ORIENTATION.NONE;
-		}
-	}
+    {
+        switch (orientation)
+        {
+            case ORIENTATION.NORTH: return ORIENTATION.SOUTH;
+            case ORIENTATION.EAST: return ORIENTATION.WEST;
+            case ORIENTATION.SOUTH: return ORIENTATION.NORTH;
+            case ORIENTATION.WEST: return ORIENTATION.EAST;
+            default: return ORIENTATION.NONE;
+        }
+    }
 
-	/// <summary>
+    /// <summary>
     /// Transforms an angle into a discrete angle.
     /// </summary>
-	public static float DiscreteAngle(float angle, float step)
+    public static float DiscreteAngle(float angle, float step)
     {
         return Mathf.Round(angle / step) * step;
     }
@@ -126,7 +131,7 @@ public static class Utils {
 
     public static List<ORIENTATION> AllOtherOrientation(ORIENTATION orientation)
     {
-        List < ORIENTATION > result = new List<ORIENTATION>();
+        List<ORIENTATION> result = new List<ORIENTATION>();
         for (int i = 0; i < 4; i++)
         {
             result.Add(IndexToOrientation(i));
@@ -134,5 +139,30 @@ public static class Utils {
 
         result.RemoveAt(OrientationToIndex(orientation));
         return result;
+    }
+
+    public static Vector2 ConvertGraphPosToWorldPos(Vector2 GameObjectSize, Vector2Int GraphPos)
+    {
+        return GameObjectSize * GraphPos;
+    }
+
+
+    public static List<T> LoadAllPrefabsOfType<T>() where T : MonoBehaviour
+    {
+        List<T> prefabComponents = new List<T>();
+
+        string[] guids = AssetDatabase.FindAssets("t:Prefab");
+
+        foreach (var guid in guids)
+        {
+            var path = AssetDatabase.GUIDToAssetPath(guid);
+            T go = AssetDatabase.LoadAssetAtPath<T>(path);
+
+            if (go)
+            {
+                prefabComponents.Add(go);
+            }
+        }
+        return prefabComponents;
     }
 }

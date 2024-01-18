@@ -5,9 +5,9 @@ using UnityEngine;
 public class RoomConnection
 {
     RoomNode[] rooms = new RoomNode[2];
-    bool Islocked;
+    public bool Islocked;
 
-   public RoomConnection(RoomNode current,RoomNode next,bool islocked)
+    public RoomConnection(RoomNode current, RoomNode next, bool islocked)
     {
         rooms[0] = current;
         rooms[1] = next;

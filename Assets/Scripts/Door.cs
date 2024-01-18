@@ -37,9 +37,17 @@ public class Door : MonoBehaviour {
 
 	private Room _room = null;
 
+    public Room Room { set =>  _room =  value; }
+
 	public void Awake()
 	{
-		_room = GetComponentInParent<Room>();
+        StartDoor();
+    }
+
+  public void StartDoor()
+    {
+        if(_room == null )
+        _room = GetComponentInParent<Room>();
         Bounds roomBounds = _room.GetLocalBounds();
         float ratio = roomBounds.size.x / roomBounds.size.y;
         Vector2 dir = transform.position - (_room.transform.position + roomBounds.center);
@@ -51,9 +59,10 @@ public class Door : MonoBehaviour {
         {
             _orientation = dir.y > 0 ? Utils.ORIENTATION.NORTH : Utils.ORIENTATION.SOUTH;
         }
+
     }
 
-	public void Start()
+    public void Start()
     {
 
         transform.rotation = Quaternion.Euler(0, 0, -Utils.OrientationToAngle(_orientation));

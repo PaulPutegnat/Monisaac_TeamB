@@ -967,6 +967,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isStartRoom: 0
+  difficulty: 0
+  NodeType: 2
   position: {x: 1, y: 0}
   size: {x: 1, y: 2}
 --- !u!50 &3816823355130275087
