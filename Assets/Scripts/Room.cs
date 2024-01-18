@@ -8,7 +8,8 @@ using UnityEngine;
 /// Represents a single room in your dungeon
 /// A room has an (i,j) integer position and a (di, dj) integer size in index coordinates
 /// </summary>
-public class Room : MonoBehaviour {
+public class Room : MonoBehaviour
+{
 
     public bool isStartRoom = false;
     public int difficulty;
@@ -19,7 +20,7 @@ public class Room : MonoBehaviour {
     public Vector2Int size = Vector2Int.one;
 
     private TilemapGroup _tilemapGroup;
-	private List<Door> doors = null;
+    [SerializeField] private List<Door> doors = null;
     private bool _isInitialized = false;
     public static List<Room> allRooms { get; private set; } = new List<Room>();
 
@@ -29,7 +30,8 @@ public class Room : MonoBehaviour {
     /// </summary>
     public List<Door> GetDoors()
     {
-        if (doors == null) {
+        if (doors == null)
+        {
             RefreshDoors();
         }
         return doors;
@@ -120,7 +122,7 @@ public class Room : MonoBehaviour {
     /// </summary>
     public Door GetDoor(Utils.ORIENTATION orientation, Vector3 from)
     {
-        return GetDoor(orientation, GetPositionOffset(from));        
+        return GetDoor(orientation, GetPositionOffset(from));
     }
 
     /// <summary>
@@ -128,7 +130,7 @@ public class Room : MonoBehaviour {
     /// </summary>
     public Door GetDoor(Utils.ORIENTATION orientation)
     {
-        Debug.Assert(size != Vector2Int.one, "GetDoor(orientation) should only be used on room of size {1,1}. In other cases, please use: GetDoor(orientation,offset)");        
+        Debug.Assert(size == Vector2Int.one, "GetDoor(orientation) should only be used on room of size {1,1}. In other cases, please use: GetDoor(orientation,offset)");
         return GetDoor(orientation, Vector2Int.zero);
     }
 
@@ -153,13 +155,13 @@ public class Room : MonoBehaviour {
 
     void Awake()
     {
-		allRooms.Add(this);
-		Initialize();
-	}
+        allRooms.Add(this);
+        Initialize();
+    }
 
-	void Start()
-	{
-       // StartRoom();
+    void Start()
+    {
+        // StartRoom();
         if (isStartRoom)
         {
             Player.Instance.EnterRoom(this);
@@ -168,6 +170,7 @@ public class Room : MonoBehaviour {
 
     public void StartRoom()
     {
+        doors.Clear();
         RefreshDoors();
         foreach (var item in doors)
         {
@@ -177,11 +180,14 @@ public class Room : MonoBehaviour {
     }
 
     private void RefreshDoors()
-	{
-		if(doors == null) {
+    {
+        if (doors == null)
+        {
             doors = new List<Door>();
-        } else {
-			doors.Clear();
+        }
+        else
+        {
+            doors.Clear();
         }
         GetComponentsInChildren<Door>(true, doors);
     }
@@ -197,32 +203,32 @@ public class Room : MonoBehaviour {
         Vector2Int offset = Vector2Int.zero;
         Bounds bounds = GetWorldBounds();
         Vector3 localPoint = worldPoint - bounds.min;
-        if(size.x > 1)
+        if (size.x > 1)
         {
-            offset.x = Mathf.Clamp((int)(localPoint.x / (bounds.size.x / size.x)), 0, size.x-1);
+            offset.x = Mathf.Clamp((int)(localPoint.x / (bounds.size.x / size.x)), 0, size.x - 1);
         }
         if (size.y > 1)
         {
-            offset.y = Mathf.Clamp((int)(localPoint.y / (bounds.size.y / size.y)), 0, size.y-1);
+            offset.y = Mathf.Clamp((int)(localPoint.y / (bounds.size.y / size.y)), 0, size.y - 1);
         }
         return offset;
     }
 
     private void Initialize()
     {
-		if (_isInitialized)
-			return;
-		_tilemapGroup = GetComponentInChildren<TilemapGroup>();
-		foreach (STETilemap tilemap in _tilemapGroup.Tilemaps)
-		{
-			tilemap.RecalculateMapBounds();
-		}
-		_isInitialized = true;
-	}
+        if (_isInitialized)
+            return;
+        _tilemapGroup = GetComponentInChildren<TilemapGroup>();
+        foreach (STETilemap tilemap in _tilemapGroup.Tilemaps)
+        {
+            tilemap.RecalculateMapBounds();
+        }
+        _isInitialized = true;
+    }
 
-	private void OnDestroy()
-	{
-		allRooms.Remove(this);
-	}
+    private void OnDestroy()
+    {
+        allRooms.Remove(this);
+    }
     #endregion Internal 
 }

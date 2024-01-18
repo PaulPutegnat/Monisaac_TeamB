@@ -32,7 +32,7 @@ public class LevelGraph : MonoBehaviour
 
 
     [Header("Nodes")]
-    [Range(1, 100)] public int unlockedMax = 0;
+    [Range(0, 100)] public int unlockedMax = 0;
     public int SizeNodelist = 10;
     private int Limitedtry = 1000;
     public bool useSeed = false;
@@ -51,10 +51,14 @@ public class LevelGraph : MonoBehaviour
     [Button(enabledMode: EButtonEnableMode.Playmode)]
     void GenerateGraphMap()
     {
+        foreach (var node in _rooms)
+        {
+            Destroy(node.gameObject);
+        }
         GenerateMap(difficulty);
     }
     [ShowIf("useSeed")] public int seed = 0;
-
+    public bool debug;
     readonly Vector2Int[] adjacentDir = { new Vector2Int(1,0) , new Vector2Int(0,1)
     ,new Vector2Int(-1,0),new Vector2Int(0,-1)};
 
@@ -70,8 +74,20 @@ public class LevelGraph : MonoBehaviour
         int i = 0;
         foreach (var node in _nodes)
         {
-            _rooms[i] = Instantiate(db.GetRandomByNodeRoom(node.Value, 0));
-            _rooms[i].transform.position = Utils.ConvertGraphPosToWorldPos(_rooms[i].transform.lossyScale, node.Key) *10 * _rooms[i].size;
+            Room room = db.GetRandomByNodeRoom(node.Value, true, difficulty);
+            if (!room)
+            {
+                Debug.LogError("Room not found Generation broken !");
+            }
+            _rooms[i] = Instantiate(room);
+            foreach (var item in _rooms[i].GetDoors())
+            {
+                item.SetState(Door.STATE.OPEN);
+            }
+            _rooms[i].isStartRoom = node.Value.NodeType == RoomNode.Type.Start;
+            _rooms[i].position = node.Key;
+            _rooms[i].transform.position = Utils.ConvertGraphPosToWorldPos(_rooms[i].transform.lossyScale, _rooms[i].position) *
+                new Vector2(RoomWidth, RoomHeight);
             i++;
         }
     }
@@ -180,7 +196,7 @@ public class LevelGraph : MonoBehaviour
 
     private void OnDrawGizmos()
     {
-        if (Application.isPlaying)
+        if (Application.isPlaying && debug)
         {
             foreach (var item in _nodes)
             {
