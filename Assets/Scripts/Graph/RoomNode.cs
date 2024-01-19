@@ -10,7 +10,6 @@ public class RoomNode
     public int difficulty;
     public RoomConnection[] connections = new RoomConnection[4];
     public RoomConnection next;
-
     public RoomNode(Vector2Int position)
     {
         GraphPosition = position;

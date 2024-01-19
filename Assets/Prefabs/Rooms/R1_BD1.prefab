@@ -240,13 +240,12 @@ MonoBehaviour:
     obj: {fileID: 4390719662570056637}
   - tilePos: 244
     tilePrefabData:
-      prefab: {fileID: 4766563019477658476, guid: 9da7b780c096a1f42b3578150579f43f,
-        type: 3}
+      prefab: {fileID: 0}
       offset: {x: 0, y: 0, z: 0}
       rotation: {x: 0, y: 0, z: 0}
       offsetMode: 0
       showTileWithPrefab: 0
-      showPrefabPreviewInTilePalette: 1
+      showPrefabPreviewInTilePalette: 0
     obj: {fileID: 7978249570946807652}
   - tilePos: 246
     tilePrefabData:
@@ -441,6 +440,7 @@ MonoBehaviour:
   NodeType: 1
   position: {x: 0, y: 0}
   size: {x: 1, y: 1}
+  doors: []
 --- !u!50 &4452598050071473784
 Rigidbody2D:
   serializedVersion: 4

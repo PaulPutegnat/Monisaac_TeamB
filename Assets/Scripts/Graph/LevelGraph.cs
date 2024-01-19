@@ -47,6 +47,7 @@ public class LevelGraph : MonoBehaviour
     {
         _nodes.Clear();
         GenerateGraph();
+        GenerateGraphMap();
     }
     [Button(enabledMode: EButtonEnableMode.Playmode)]
     void GenerateGraphMap()
@@ -82,7 +83,36 @@ public class LevelGraph : MonoBehaviour
             _rooms[i] = Instantiate(room);
             foreach (var item in _rooms[i].GetDoors())
             {
-                item.SetState(Door.STATE.OPEN);
+                RoomConnection connection = null;
+                switch (item.Orientation)
+                {
+                    case Utils.ORIENTATION.NORTH:
+                        connection = node.Value.connections[0];
+                        break;
+                    case Utils.ORIENTATION.EAST:
+                        connection = node.Value.connections[1];
+                        break;
+                    case Utils.ORIENTATION.SOUTH:
+                        connection = node.Value.connections[2];
+                        break;
+                    case Utils.ORIENTATION.WEST:
+                        connection = node.Value.connections[3];
+                        break;
+                    default:
+                        break;
+                }
+                if (connection != null && connection.Islocked)
+                {
+                    item.SetState(Door.STATE.CLOSED);
+                }
+                else if (connection != null && node.Value.NodeType == RoomNode.Type.Secret)
+                {
+                    item.SetState(Door.STATE.SECRET);
+                }
+                else
+                {
+                    item.SetState(Door.STATE.OPEN);
+                }
             }
             _rooms[i].isStartRoom = node.Value.NodeType == RoomNode.Type.Start;
             _rooms[i].position = node.Key;
@@ -141,6 +171,10 @@ public class LevelGraph : MonoBehaviour
                     Debug.LogWarning("Relaunch");
                     continue;
                 }
+
+                PlaceSecretRoom();
+
+
                 break;
             }
             Debug.LogWarning("Relaunch");
@@ -150,7 +184,6 @@ public class LevelGraph : MonoBehaviour
     }
     bool TryToGeneratePath(RoomNode StartRoom, int length)
     {
-
         Utils.ORIENTATION currentOrientation = Utils.ORIENTATION.NONE;
         RoomNode currentNode = StartRoom;
         lastPath.Clear();
@@ -190,8 +223,91 @@ public class LevelGraph : MonoBehaviour
             currentNode = _nodes[nextposition];
             lastPath.Add(_nodes[nextposition]);
         }
-
         return true;
+    }
+
+    void PlaceSecretRoom()
+    {
+        Vector2Int position = Vector2Int.zero;
+        bool conditionForSecret = false;
+        List<RoomNode> possibleRoom = new List<RoomNode>();
+        foreach (var node in _nodes) 
+        {
+            int allroomForSecret = 0;
+            Vector2Int dir = Vector2Int.zero;
+            for (int i = 0; i < 4; i++)
+            {
+                switch (i)
+                {
+                    case 0:
+                        dir = Vector2Int.up;
+                        break;
+                    case 1:
+                        dir = Vector2Int.down;
+                        break;
+                    case 2:
+                        dir = Vector2Int.left;
+                        break;
+                    case 3:
+                        dir = Vector2Int.right;
+                        break;
+                    default:
+                        break;
+                }
+                if (!_nodes.ContainsKey(node.Value.GraphPosition + dir)
+                    && node.Value.NodeType != RoomNode.Type.Start
+                    && node.Value.NodeType != RoomNode.Type.End)
+                {
+                    position = node.Value.GraphPosition + dir;
+                    for (int j = 0; j < 4; j++)
+                    {
+                        switch (j)
+                        {
+                            case 0:
+                                if (_nodes.ContainsKey(position + Vector2Int.up)
+                                    && _nodes[position + Vector2Int.up].NodeType == RoomNode.Type.Start
+                                    && _nodes[position + Vector2Int.up].NodeType == RoomNode.Type.End)
+                                    allroomForSecret++;
+                                break;
+                            case 1:
+                                if (_nodes.ContainsKey(position + Vector2Int.left)
+                                    && _nodes[position + Vector2Int.left].NodeType == RoomNode.Type.Start
+                                    && _nodes[position + Vector2Int.left].NodeType == RoomNode.Type.End)
+                                    allroomForSecret++;
+                                break;
+                            case 2:
+                                if (_nodes.ContainsKey(position + Vector2Int.right)
+                                    && _nodes[position + Vector2Int.right].NodeType == RoomNode.Type.Start
+                                    && _nodes[position + Vector2Int.right].NodeType == RoomNode.Type.End)
+                                    allroomForSecret++;
+                                allroomForSecret++;
+                                break;
+                            case 3:
+                                if (_nodes.ContainsKey(position + Vector2Int.down)
+                                    && _nodes[position + Vector2Int.down].NodeType == RoomNode.Type.Start
+                                    && _nodes[position + Vector2Int.down].NodeType == RoomNode.Type.End)
+                                    allroomForSecret++;
+                                allroomForSecret++; ;
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                    if (allroomForSecret >= 3)
+                    {
+                        conditionForSecret = true;
+                    }
+
+                }
+                if (conditionForSecret)
+                {
+                     possibleRoom.Add( new RoomNode(position));
+                    possibleRoom[possibleRoom.Count - 1].NodeType = RoomNode.Type.Secret;
+                }
+            }
+        }
+        int randomindex = Random.Range(0,possibleRoom.Count-1);
+        _nodes[possibleRoom[randomindex].GraphPosition] = possibleRoom[randomindex];
     }
 
     private void OnDrawGizmos()
@@ -206,8 +322,11 @@ public class LevelGraph : MonoBehaviour
                     Gizmos.color = Color.magenta;
                 else if (item.Value.NodeType == RoomNode.Type.Locked)
                     Gizmos.color = Color.yellow;
+                else if (item.Value.NodeType == RoomNode.Type.Secret)
+                    Gizmos.color = Color.black;
                 else if (item.Value.NodeType == RoomNode.Type.End)
                     Gizmos.color = Color.red;
+
                 else
                     Gizmos.color = Color.blue;
                 Gizmos.DrawCube(new Vector3(item.Key.x * RoomWidth, item.Key.y * RoomHeight), new Vector3(RoomWidth, RoomHeight, 1));

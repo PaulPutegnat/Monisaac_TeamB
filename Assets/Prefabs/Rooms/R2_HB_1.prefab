@@ -254,9 +254,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isStartRoom: 0
   difficulty: 0
-  NodeType: 2
+  NodeType: 5
   position: {x: 0, y: 0}
   size: {x: 1, y: 1}
+  doors:
+  - {fileID: 4681032028212756018}
+  - {fileID: 8459173589328722815}
 --- !u!50 &2046720661762492684
 Rigidbody2D:
   serializedVersion: 4
@@ -1337,6 +1340,18 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 5416856357268216285}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &8459173589328722815 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4488276453942895266, guid: 94bbea04c40d9c144bedd2c8c4df140e,
+    type: 3}
+  m_PrefabInstance: {fileID: 5416856357268216285}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8907222276145447351}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 713f1094d6bc49a4d93b8279be3707bd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &8907222276145447351 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 3508380386316081258, guid: 94bbea04c40d9c144bedd2c8c4df140e,
@@ -1817,6 +1832,18 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 9133249963862318224}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &4681032028212756018 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4488276453942895266, guid: 94bbea04c40d9c144bedd2c8c4df140e,
+    type: 3}
+  m_PrefabInstance: {fileID: 9133249963862318224}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5624880675842524410}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 713f1094d6bc49a4d93b8279be3707bd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &5624880675842524410 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 3508380386316081258, guid: 94bbea04c40d9c144bedd2c8c4df140e,
