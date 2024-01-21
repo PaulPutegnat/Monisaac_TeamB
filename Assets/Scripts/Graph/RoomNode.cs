@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class RoomNode
 {
-    public enum Type { Start, End, Default,Key,Locked,Secret  }
+    public enum Type { Start, End, Default,Key,Locked,Secret,None  }
     public Type NodeType;
     public Vector2Int GraphPosition;
     public int difficulty;
@@ -13,6 +13,6 @@ public class RoomNode
     public RoomNode(Vector2Int position)
     {
         GraphPosition = position;
-        Debug.Log("Postion Node :" + GraphPosition);
+        //Debug.Log("Postion Node :" + GraphPosition);
     }
 }

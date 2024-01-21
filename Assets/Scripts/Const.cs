@@ -137,7 +137,10 @@ public static class Utils
             result.Add(IndexToOrientation(i));
         }
 
-        result.RemoveAt(OrientationToIndex(orientation));
+        if (orientation != ORIENTATION.NONE)
+        {
+            result.RemoveAt(OrientationToIndex(orientation));
+        }
         return result;
     }
 
