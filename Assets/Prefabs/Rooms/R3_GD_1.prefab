@@ -332,7 +332,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isStartRoom: 1
-  difficulty: 0
+  difficulty: 3
   NodeType: 2
   position: {x: 0, y: 0}
   size: {x: 1, y: 1}

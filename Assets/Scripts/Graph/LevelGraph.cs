@@ -12,7 +12,7 @@ public class LevelGraph : MonoBehaviour
 
     [Range(1, 100)] public int startSpawnUnlockedDoor = 1;
     [Range(1, 100)] public int endSpawnUnlockedDoor = 2;
-    int difficulty = 0;
+
     private int StartUnlockedDoor
     {
         get
@@ -59,7 +59,7 @@ public class LevelGraph : MonoBehaviour
                 Destroy(node.gameObject);
             }
         }
-        GenerateMap(difficulty);
+        GenerateMap();
     }
     [ShowIf("useSeed")] public int seed = 0;
     public bool debug;
@@ -69,10 +69,10 @@ public class LevelGraph : MonoBehaviour
     private void Start()
     {
         GenerateGraph();
-        GenerateMap(difficulty);
+        GenerateMap();
     }
 
-    void GenerateMap(int difficulty)
+    void GenerateMap()
     {
         _rooms = new Room[_nodes.Count];
         int i = 0;
@@ -80,7 +80,7 @@ public class LevelGraph : MonoBehaviour
         {
             if (node.Value.NodeType != RoomNode.Type.None)
             {
-                Room room = db.GetRandomByNodeRoom(node.Value, true, difficulty);
+                Room room = db.GetRandomByNodeRoom(node.Value, true, node.Value.difficulty);
                 if (!room)
                 {
                     Debug.LogError("Room not found Generation broken !");
@@ -205,6 +205,15 @@ public class LevelGraph : MonoBehaviour
         lastPath.Clear();
         for (int i = 0; i < length; i++)
         {
+            if (i >= 4)
+            {
+                currentNode.difficulty = 1;
+            }
+            if (i >= 6)
+            {
+                currentNode.difficulty = 2;
+            }
+
             List<Utils.ORIENTATION> currentOrientations = Utils.AllOtherOrientation(currentOrientation);
             Vector2Int nextposition = Vector2Int.zero;
             while (currentOrientations.Count != 0)

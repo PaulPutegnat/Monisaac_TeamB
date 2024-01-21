@@ -339,9 +339,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   db: {fileID: 11400000, guid: e022d760901f3a0409e74b5c789ca910, type: 2}
   startSpawnUnlockedDoor: 2
-  endSpawnUnlockedDoor: 15
+  endSpawnUnlockedDoor: 13
   unlockedMax: 2
-  SizeNodelist: 25
+  SizeNodelist: 15
   useSeed: 0
   RoomWidth: 11
   RoomHeight: 9
